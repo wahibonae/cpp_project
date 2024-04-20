@@ -1,3 +1,12 @@
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// continue from line 103
+// TODOs:
+//      - add the needed methods to the classes having relations
+//      - continue adding the relations
+//      - complete the fiche_paiement() method
+//
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -100,7 +109,7 @@ class Produit{
         double prixHT;
         // Produit – Stock (* à 1): chaque produit fait partie d’un stock
         Stock* stock;
-        // continue from here !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        
     public:
         Produit(int r=0, string d="", int q=0, double p=0):
             reference(r),
