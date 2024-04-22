@@ -109,7 +109,8 @@ class Produit{
         double prixHT;
         // Produit – Stock (* à 1): chaque produit fait partie d’un stock
         Stock* stock;
-        
+        // Produit- Fournisseur (* à *) : un produit est fourni par plusieurs fournisseurs (on le met ici), et un fournisseur fournit plusieurs produits (on le met dans la classe Fournisseur)
+        vector <Fournisseur> fournisseurs;
     public:
         Produit(int r=0, string d="", int q=0, double p=0):
             reference(r),
@@ -170,6 +171,8 @@ class Fournisseur{
         int id;
         string nom;
         string contact;
+        // Produit- Fournisseur (* à *) : un produit est fourni par plusieurs fournisseurs (on le met dans la classe Produit), et un fournisseur fournit plusieurs produits (on le met ici)
+        vector <Produit> produits;
     public:
         Fournisseur(int i=0, string n="", string c=""):
             id(i),
