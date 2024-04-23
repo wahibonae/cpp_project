@@ -12,10 +12,11 @@
 //             sort(produits.begin(), produits.end());
 //
 //
-// continue from line 368
+// continue from line 441
 // TODOs:
-//      1) Continue working on Fonctionnalité 1: gestion Stock
-//      2) add the needed methods to the classes having relations
+//      1) continue cas 3 in fonctionnalité 1 
+//      2) 
+//      3) 
 //
 //
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -27,12 +28,22 @@
 #include <cstdlib>
 using namespace std;
 
-// Q1
+// forward declaration: on évite les erreurs de compilation
+class Stock;
+class Produit;
+class Fournisseur;
+class Paiement;
+
 
 typedef struct date {
     int jour;
     int mois;
     int annee;
+    // Constructeur par défaut pour initialiser la date dans Paiements
+    date(int j=1, int m=1, int a=2024):
+        jour(j),
+        mois(m),
+        annee(a){}
 }date;
 
 class Depot {
@@ -66,60 +77,16 @@ class Depot {
             capacite = c;
         }
 
-        int getId(){
+        int getId() const{
             return id;
         }
 
-        string getAdresse(){
+        string getAdresse() const{
             return adresse;
         }
 
-        int getCapacite(){
+        int getCapacite() const{
             return capacite;
-        }
-};
-
-
-class Stock{
-    private:
-        int reference;
-        string description;
-        // Stock – Produit (1 à *): un stock contient plusieurs produits
-        vector <Produit> produits;
-        // Stock – Dépôt (* à 1): chaque stock est lié à un dépôt
-        Depot* depot;
-    public:
-        Stock(int r=0, string d=""):
-            reference(r),
-            description(d){}
-        
-        Stock(const Stock& s){
-            reference = s.reference;
-            description = s.description;
-        }
-        
-        void setReference(int r){
-            reference = r;
-        }
-
-        void setDescription(string d){
-            description = d;
-        }
-
-        int getReference(){
-            return reference;
-        }
-
-        string getDescription(){
-            return description;
-        }
-
-        void ajouterProduit(Produit p){
-            produits.push_back(p);
-        }
-
-        int getNbProduits(){
-            return produits.size();
         }
 };
 
@@ -141,13 +108,17 @@ class Produit{
             reference(r),
             designation(d),
             quantite(q),
-            prixHT(p){}
+            prixHT(p),
+            stock(nullptr){}
         
         Produit(const Produit& p){
             reference = p.reference;
             designation = p.designation;
             quantite = p.quantite;
             prixHT = p.prixHT;
+            stock = p.stock;
+            fournisseurs = p.fournisseurs;
+            paiements = p.paiements;
         }
         
         void setReference(int r){
@@ -166,19 +137,19 @@ class Produit{
             prixHT = p;
         }
 
-        int getReference(){
+        int getReference() const{
             return reference;
         }
 
-        string getDesignation(){
+        string getDesignation() const{
             return designation;
         }
 
-        int getQuantite(){
+        int getQuantite() const{
             return quantite;
         }
 
-        double getPrixHT(){
+        double getPrixHT() const{
             return prixHT;
         }
 };
@@ -206,6 +177,66 @@ class ProduitElectronique: public Produit{
         void setVersionLogiciel(double vl){
             version_logiciel = vl;
         }
+
+        double getVersionMateriel() const{
+            return version_materiel;
+        }
+
+        double getVersionLogiciel() const{
+            return version_logiciel;
+        }
+};
+
+
+class Stock{
+    private:
+        int reference;
+        string description;
+        // Stock – Produit (1 à *): un stock contient plusieurs produits
+        vector <Produit> produits;
+        // Stock – Dépôt (* à 1): chaque stock est lié à un dépôt
+        Depot* depot;
+    public:
+        Stock(int r=0, string d=""):
+            reference(r),
+            description(d),
+            depot(nullptr){}
+        
+        Stock(const Stock& s){
+            reference = s.reference;
+            description = s.description;
+            depot = s.depot;
+            produits = s.produits;
+        }
+        
+        void setReference(int r){
+            reference = r;
+        }
+
+        void setDescription(string d){
+            description = d;
+        }
+
+        int getReference() const {
+            return reference;
+        }
+
+        string getDescription() const{
+            return description;
+        }
+
+        void ajouterProduit(Produit p){
+            produits.push_back(p);
+        }
+
+        int getNbProduits() const{
+            return produits.size();
+        }
+
+        bool operator<(const Stock& other) const {
+            // Compare based on stock reference
+            return reference < other.reference;
+        }
 };
 
 
@@ -228,6 +259,8 @@ class Fournisseur{
             id = f.id;
             nom = f.nom;
             contact = f.contact;
+            produits = f.produits;
+            paiements = f.paiements;
         }
         
         void setId(int i){
@@ -242,15 +275,15 @@ class Fournisseur{
             contact = c;
         }
 
-        int getId(){
+        int getId() const{
             return id;
         }
 
-        string getNom(){
+        string getNom() const{
             return nom;
         }
 
-        string getContact(){
+        string getContact() const{
             return contact;
         }
 };
@@ -266,15 +299,18 @@ class Paiement{
         // Paiement – Produit (* à *): un paiement concerne plusieurs produits, et un produit est concerné par plusieurs paiements
         vector <Produit> produits;
     public:
-        Paiement(int i=0, double m=0, date d):
+        Paiement(int i=0, double m=0, date d=date()):
             id(i),
             montant(m),
-            date_paiement(d){}
+            date_paiement(d),
+            fournisseur(nullptr){}
         
         Paiement(const Paiement& p){
             id = p.id;
             montant = p.montant;
             date_paiement = p.date_paiement;
+            fournisseur = p.fournisseur;
+            produits = p.produits;
         }
         
         void setId(int i){
@@ -289,15 +325,15 @@ class Paiement{
             date_paiement = d;
         }
 
-        int getId(){
+        int getId() const{
             return id;
         }
 
-        double getMontant(){
+        double getMontant() const{
             return montant;
         }
 
-        string getDatePaiement(){
+        string getDatePaiement() const{
             return "Date paiement: "
                 + to_string(date_paiement.jour) + "/"
                 + to_string(date_paiement.mois) + "/"
@@ -325,47 +361,96 @@ class Paiement{
 };
 
 
-void gestionStock(set<Stock>& stocks) {
-    int nb_stock, nb_produit;
-    system("cls");
-    cout << "------ 1 - Gestion Stock ------" << endl << endl;
-    cout << "Nombre de stocks à remplir? " << endl;
-    cin >> nb_stock;
-    cout << endl << "Veuillez remplir les informations des stocks:" << endl << endl;
-    // Remplissage des stocks
-    for(int i=0; i<nb_stock; i++){
-        int ref_stock;
-        string des_stock;
-        cout << "Stock " << i+1 << endl;
-        cout << "\tReference: ";
-        cin >> ref_stock;
-        cout << "\tDescription: ";
-        cin >> des_stock;
-        Stock s(ref_stock, des_stock);
-        // Remplissage des produits à l'intérieur du stock dans vector<Produit> produits
-        cout << "\t Nombre de produits à remplir? " << endl;
-        cin >> nb_produit;
-        for(int j=0; j<nb_produit; j++){
-            int ref_prod;
-            string des_prod;
-            int qte_prod;
-            double prix_prod;
-            cout << "\tProduit " << j+1 << endl;
-            cout << "\t\tReference: ";
-            cin >> ref_prod;
-            cout << "\t\tDescription: ";
-            cin >> des_prod;
-            cout << "\t\tQuantite: ";
-            cin >> qte_prod;
-            cout << "\t\tPrix: ";
-            cin >> prix_prod;
-            Produit p(ref_prod, des_prod, qte_prod, prix_prod);
-            s.ajouterProduit(p);
-        }
-        stocks.insert(s);
-    }
-    // Affichage du nombre de produits dans chaque stock
+void fonct1(set <Stock>& stocks) {
+    int choix;
 
+    while(true){
+        system("cls");
+        cout << "------ 1 - Gestion Stock ------" << endl << endl;
+        cout << "\t1. Remplir les stocks" << endl
+            << "\t2. Afficher le nombre des produits de chaque stock" << endl
+            << "\t3. Manipuler le stock" << endl
+            << "\t4. Retour" << endl
+            << "Votre choix: ";
+        cin >> choix;
+        if(choix == 4){
+            break;
+        }
+        switch(choix){
+            case 1:
+                // Remplir les stocks
+                int nb_stock, nb_produit;
+                system("cls");
+                cout << "------- Gestion Stock -------" << endl << endl;
+                cout << "Nombre de stocks à remplir? ";
+                cin >> nb_stock;
+                cout << endl << "Veuillez remplir les informations des stocks:" << endl << endl;
+                for(int i=0; i<nb_stock; i++){
+                    int ref_stock;
+                    string des_stock;
+                    cout << "Stock " << i+1 << endl;
+                    cout << "\tReference: ";
+                    cin >> ref_stock;
+                    cout << "\tDescription: ";
+                    cin >> des_stock;
+                    Stock s(ref_stock, des_stock);
+                    // Remplissage des produits à l'intérieur du stock dans vector<Produit> produits
+                    cout << "\t Nombre de produits à remplir? " << endl;
+                    cin >> nb_produit;
+                    cout << endl << "Veuillez remplir les informations des produits:" << endl << endl;
+                    for(int j=0; j<nb_produit; j++){
+                        int ref_prod;
+                        string des_prod;
+                        int qte_prod;
+                        double prix_prod;
+                        cout << "\tProduit " << j+1 << endl;
+                        cout << "\t\tReference: ";
+                        cin >> ref_prod;
+                        cout << "\t\tDescription: ";
+                        cin >> des_prod;
+                        cout << "\t\tQuantite: ";
+                        cin >> qte_prod;
+                        cout << "\t\tPrix: ";
+                        cin >> prix_prod;
+                        Produit p(ref_prod, des_prod, qte_prod, prix_prod);
+                        s.ajouterProduit(p);
+                        cout << endl;
+                    }
+                    stocks.insert(s);
+                    cout << endl;
+                }
+                cout << "Tapez un bouton pour retourner au MENU... ";
+                cin.ignore();
+                cin.get();
+                break;
+            case 2:
+                // Afficher le nombre des produits de chaque stock
+                set <Stock>::iterator it;
+                system("cls");
+                cout << "------- Gestion Stock -------" << endl << endl;
+                cout << "Nombre de produits dans chaque stock:" << endl;
+                for(it=stocks.begin(); it!=stocks.end(); it++){
+                    cout << "\tStock " << it->getReference()
+                        << " - " << it->getNbProduits() << " produits" << endl;
+                }
+                cout << "Tapez un bouton pour retourner au MENU... ";
+                cin.ignore();
+                cin.get();
+                break;
+            case 3:
+                // Manipuler le stock
+                break;
+            default:
+                cout << "Choix invalide. Tapez un bouton pour retourner au MENU... ";
+                cin.ignore();
+                cin.get();
+        }
+    }
+
+
+    
+    // Affichage du nombre de produits dans chaque stock
+    
 }
 
 
@@ -376,7 +461,8 @@ int main(){
     // MENU and functionalities    
     while(true){
         system("cls");
-        cout << "\t1. Gestion Stock" << endl
+        cout << "------------ MENU ------------" << endl
+            << "\t1. Gestion Stock" << endl
             << "\t2. Gestion Fournisseur" << endl
             << "\t3. Gestion Produits" << endl
             << "\t4. Gestion Paiement" << endl
@@ -386,8 +472,9 @@ int main(){
         switch(choix){
             case 1:
                 // ** Fonctionnalité 1 : gestion Stock **
-                gestionStock(stocks);
+                fonct1(stocks);
                 
+                return 0;
                 break;
             case 2:
                 // ** Fonctionnalité 2 : Gestion Fournisseur **
