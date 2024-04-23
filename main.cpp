@@ -1,9 +1,22 @@
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// INFOs:
+//      - Use les itérateurs pour parcourir les vecteurs
+//          exemple:
+//             vector<Produit>::iterator it;
+//             for(it=produits.begin(); it!=produits.end(); it++){
+//                ...
+//             }
+//
+//      - Use les algorithmes de la STL pour manipuler les vecteurs (ex: sort, find, ...)
+//          exemple:
+//             sort(produits.begin(), produits.end());
+//
+//
 // continue from line 103
 // TODOs:
-//      - add the needed methods to the classes having relations
-//      - continue adding the relations
-//      - complete the fiche_paiement() method
+//      1) Créer un menu de navigation pour les différentes fonctionnalités
+//      2) add the needed methods to the classes having relations
+//
 //
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -111,6 +124,8 @@ class Produit{
         Stock* stock;
         // Produit- Fournisseur (* à *) : un produit est fourni par plusieurs fournisseurs (on le met ici), et un fournisseur fournit plusieurs produits (on le met dans la classe Fournisseur)
         vector <Fournisseur> fournisseurs;
+        // Paiement – Produit (* à *): un paiement concerne plusieurs produits, et un produit est concerné par plusieurs paiements
+        vector <Paiement> paiements;
     public:
         Produit(int r=0, string d="", int q=0, double p=0):
             reference(r),
@@ -163,6 +178,24 @@ class ProduitElectronique: public Produit{
     private:
         double version_materiel;
         double version_logiciel;
+    public:
+        ProduitElectronique(int r=0, string d="", int q=0, double p=0, double vm=0, double vl=0):
+            Produit(r, d, q, p),
+            version_materiel(vm),
+            version_logiciel(vl){}
+        
+        ProduitElectronique(const ProduitElectronique& pe):
+            Produit(pe),
+            version_materiel(pe.version_materiel),
+            version_logiciel(pe.version_logiciel){}
+        
+        void setVersionMateriel(double vm){
+            version_materiel = vm;
+        }
+
+        void setVersionLogiciel(double vl){
+            version_logiciel = vl;
+        }
 };
 
 
@@ -173,6 +206,8 @@ class Fournisseur{
         string contact;
         // Produit- Fournisseur (* à *) : un produit est fourni par plusieurs fournisseurs (on le met dans la classe Produit), et un fournisseur fournit plusieurs produits (on le met ici)
         vector <Produit> produits;
+        // Fournisseur – Paiement(1 à *): un fournisseur peut avoir plusieurs paiements
+        vector <Paiement> paiements;
     public:
         Fournisseur(int i=0, string n="", string c=""):
             id(i),
@@ -216,6 +251,10 @@ class Paiement{
         int id;
         double montant;
         date date_paiement;
+        // Paiement – Fournisseur (* à 1)
+        Fournisseur* fournisseur;
+        // Paiement – Produit (* à *): un paiement concerne plusieurs produits, et un produit est concerné par plusieurs paiements
+        vector <Produit> produits;
     public:
         Paiement(int i=0, double m=0, date d):
             id(i),
@@ -256,12 +295,58 @@ class Paiement{
         }
 
         void fiche_paiement(){
-            cout << "Identifiant paiement: " << id << "\t\t\t" << getDatePaiement() << endl
-                << "Identifiant fournisseur: "; // continue here
+            vector<Produit>::iterator it; // Itérateurs pour parcouir le vecteur de produits
+
+            cout << "- Identifiant paiement: " << id << "\t\t\t- Date paiement: " << getDatePaiement() << endl
+                << "- Identifiant fournisseur: " << fournisseur->getId()
+                << "- Liste produits: " << endl
+                << "Reference produit\tDesignation\tQuantite\tPrix" << endl;
+            
+            for(it=produits.begin(); it!=produits.end(); it++){
+                cout << it->getReference() << "\t\t\t"
+                    << it->getDesignation() << "\t\t"
+                    << it->getQuantite() << "\t\t"
+                    << it->getPrixHT() << endl;
+            }
+
+            cout << "- Total à payer: " << montant << endl;
+            
         }
 };
 
 int main(){
-    Paiement p1(1, 100, {1, 1, 2021});
-    
+    // create a menu for the 4 functionalities: stock, fournisseur, produits, paiement
+    int choix;
+    while(true){
+        cout << "\t1. Stock" << endl
+            << "\t2. Fournisseur" << endl
+            << "\t3. Produits" << endl
+            << "\t4. Paiement" << endl
+            << "\t5. Quitter" << endl;
+        cout << "Votre choix: ";
+        cin >> choix;
+        switch(choix){
+            case 1:
+                // stock
+                
+                break;
+            case 2:
+                // fournisseur
+
+                break;
+            case 3:
+                // produits
+                
+                break;
+            case 4:
+                // paiement
+                
+                break;
+            case 5:
+                return 0;
+            default:
+                cout << "Choix invalide\n";
+        }
+    }
+
 }
