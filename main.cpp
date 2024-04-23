@@ -12,9 +12,9 @@
 //             sort(produits.begin(), produits.end());
 //
 //
-// continue from line 103
+// continue from line 368
 // TODOs:
-//      1) Créer un menu de navigation pour les différentes fonctionnalités
+//      1) Continue working on Fonctionnalité 1: gestion Stock
 //      2) add the needed methods to the classes having relations
 //
 //
@@ -23,6 +23,8 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <set>
+#include <cstdlib>
 using namespace std;
 
 // Q1
@@ -110,6 +112,14 @@ class Stock{
 
         string getDescription(){
             return description;
+        }
+
+        void ajouterProduit(Produit p){
+            produits.push_back(p);
+        }
+
+        int getNbProduits(){
+            return produits.size();
         }
 };
 
@@ -314,32 +324,81 @@ class Paiement{
         }
 };
 
+
+void gestionStock(set<Stock>& stocks) {
+    int nb_stock, nb_produit;
+    system("cls");
+    cout << "------ 1 - Gestion Stock ------" << endl << endl;
+    cout << "Nombre de stocks à remplir? " << endl;
+    cin >> nb_stock;
+    cout << endl << "Veuillez remplir les informations des stocks:" << endl << endl;
+    // Remplissage des stocks
+    for(int i=0; i<nb_stock; i++){
+        int ref_stock;
+        string des_stock;
+        cout << "Stock " << i+1 << endl;
+        cout << "\tReference: ";
+        cin >> ref_stock;
+        cout << "\tDescription: ";
+        cin >> des_stock;
+        Stock s(ref_stock, des_stock);
+        // Remplissage des produits à l'intérieur du stock dans vector<Produit> produits
+        cout << "\t Nombre de produits à remplir? " << endl;
+        cin >> nb_produit;
+        for(int j=0; j<nb_produit; j++){
+            int ref_prod;
+            string des_prod;
+            int qte_prod;
+            double prix_prod;
+            cout << "\tProduit " << j+1 << endl;
+            cout << "\t\tReference: ";
+            cin >> ref_prod;
+            cout << "\t\tDescription: ";
+            cin >> des_prod;
+            cout << "\t\tQuantite: ";
+            cin >> qte_prod;
+            cout << "\t\tPrix: ";
+            cin >> prix_prod;
+            Produit p(ref_prod, des_prod, qte_prod, prix_prod);
+            s.ajouterProduit(p);
+        }
+        stocks.insert(s);
+    }
+    // Affichage du nombre de produits dans chaque stock
+
+}
+
+
 int main(){
-    // create a menu for the 4 functionalities: stock, fournisseur, produits, paiement
+    set <Stock> stocks;
     int choix;
+
+    // MENU and functionalities    
     while(true){
-        cout << "\t1. Stock" << endl
-            << "\t2. Fournisseur" << endl
-            << "\t3. Produits" << endl
-            << "\t4. Paiement" << endl
+        system("cls");
+        cout << "\t1. Gestion Stock" << endl
+            << "\t2. Gestion Fournisseur" << endl
+            << "\t3. Gestion Produits" << endl
+            << "\t4. Gestion Paiement" << endl
             << "\t5. Quitter" << endl;
         cout << "Votre choix: ";
         cin >> choix;
         switch(choix){
             case 1:
-                // stock
+                // ** Fonctionnalité 1 : gestion Stock **
+                gestionStock(stocks);
                 
                 break;
             case 2:
-                // fournisseur
+                // ** Fonctionnalité 2 : Gestion Fournisseur **
 
                 break;
             case 3:
-                // produits
+                // ** Fonctionnalité 3 : Gestion Produits **
                 
                 break;
             case 4:
-                // paiement
+                // ** Fonctionnalité 4 : Gestion Paiement **
                 
                 break;
             case 5:
