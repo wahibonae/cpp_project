@@ -368,6 +368,7 @@ void fonct1(set <Stock>& stocks) {
     int choix;
     string desc;
     Stock S;
+    bool found;
 
     while(true){
         system("cls");
@@ -383,7 +384,7 @@ void fonct1(set <Stock>& stocks) {
         }
         switch(choix){
             case 1:
-                // Remplir les stocks
+                // Cas 1 - Remplir les stocks
                 int nb_stock, nb_produit;
                 system("cls");
                 cout << "------- Gestion Stock -------" << endl << endl;
@@ -429,7 +430,7 @@ void fonct1(set <Stock>& stocks) {
                 cin.get();
                 break;
             case 2:
-                // Afficher le nombre des produits de chaque stock
+                // Cas 2 - Afficher le nombre des produits de chaque stock
                 set <Stock>::iterator it;
                 system("cls");
                 cout << "------- Gestion Stock -------" << endl << endl;
@@ -443,20 +444,23 @@ void fonct1(set <Stock>& stocks) {
                 cin.get();
                 break;
             case 3:
-                // Manipuler le stock
+                // Cas 3 - Manipuler le stock
                 int ref_stock, choix2;
-                
                 set <Stock>::iterator it;
                 system("cls");
                 cout << "------- Gestion Stock -------" << endl << endl;
-                cout << "Veuillez choisir l'operation a effectuer :" << endl;
-                cout << "\t1. Ajouter stock" << endl << "\t2. Modifier stock" << endl << "\t3. Supprimer stock" << endl;
+                cout << "\t1. Ajouter stock" << endl
+                    << "\t2. Modifier stock" << endl
+                    << "\t3. Supprimer stock" << endl
+                    << "\t4. Retour" << endl
+                    << "Votre choix: ";
                 cin >> choix2;
                 switch (choix2){
                     case 1:
-                        //ajouter stock
+                        // Cas 3.1 - ajouter stock
                         system("cls");
-                        cout << "Entrez les informations du stock:" << endl;
+                        cout << "------- Gestion Stock -------" << endl << endl;
+                        cout << "Entrez les informations du stock a ajouter:" << endl;
                         cout << "\tReference: ";
                         cin >> ref_stock;
                         cout << "\tDescription: ";
@@ -464,13 +468,19 @@ void fonct1(set <Stock>& stocks) {
                         S.setReference(ref_stock);
                         S.setDescription(desc);
                         stocks.insert(S);
-                        cout << "Stock ajoute avec succes!" << endl;
+                        cout << "Stock ajoute avec succes!" << endl << endl;
+                        cout << "Tapez un bouton pour retourner au MENU... ";
+                        cin.ignore();
+                        cin.get();
                         break;
                     case 2:
-                        // modifier stock
+                        // Cas 3.2 - modifier stock
                         system("cls");
+                        cout << "------- Gestion Stock -------" << endl << endl;
                         cout << "Entrez la reference du stock a modifier: ";
                         cin >> ref_stock;
+                        cout << endl;
+                        found = false;
                         for(it=stocks.begin(); it!=stocks.end(); it++){
                             if(it->getReference() == ref_stock){
                                 cout << "Entrez les nouvelles informations du stock:" << endl;
@@ -483,27 +493,52 @@ void fonct1(set <Stock>& stocks) {
                                 modifiedStock.setDescription(desc);
                                 stocks.erase(it);
                                 stocks.insert(modifiedStock);
-                                cout << "Stock modifie avec succes!" << endl;
+                                cout << endl << "Stock modifie avec succes!" << endl << endl;
+                                found = true;
                                 break;
                             }
                         }
+                        if(found == false){
+                            cout << "Stock introuvable!" << endl << endl;
+                        }
+                        cout << "Tapez un bouton pour retourner au MENU... ";
+                        cin.ignore();
+                        cin.get();
+                        break;
                     case 3:
-                        //supprimer stock
+                        // Cas 3.3 - supprimer stock
                         system("cls");
+                        cout << "------- Gestion Stock -------" << endl << endl;
                         cout << "Entrer la reference  du stock a supprimer :";
                         cin >> ref_stock;
+                        cout << endl;
+                        found = false;
                         for(it=stocks.begin(); it!=stocks.end(); it++){
                             if(it->getReference() == ref_stock){
                                 stocks.erase(it);
                                 cout << "Stock supprime avec succes!" << endl;
+                                found = true;
                                 break;
                             }
-                            else{
-                                cout << "Stock introuvable!" << endl;
-                            }
                         }
+                        if(found == false){
+                            cout << "Stock introuvable!" << endl << endl;
+                        }
+                        cout << "Tapez un bouton pour retourner au MENU... ";
+                        cin.ignore();
+                        cin.get();
+                        break;
+                    defautlt:
+                        cout << "Choix invalide. Tapez un bouton pour retourner au MENU... ";
+                        cin.ignore();
+                        cin.get();
 
                 }
+                cout << "Tapez un bouton pour retourner au MENU... ";
+                cin.ignore();
+                cin.get();
+                break;
+            case 4:
                 break;
             default:
                 cout << "Choix invalide. Tapez un bouton pour retourner au MENU... ";
@@ -511,8 +546,6 @@ void fonct1(set <Stock>& stocks) {
                 cin.get();
         }
     }
-
-
     
     // Affichage du nombre de produits dans chaque stock
     
