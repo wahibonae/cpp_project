@@ -88,6 +88,9 @@ class Depot {
         int getCapacite() const{
             return capacite;
         }
+        void ajouterStock(Stock s){
+            stocks.push_back(s);
+        }
 };
 
 
@@ -363,6 +366,8 @@ class Paiement{
 
 void fonct1(set <Stock>& stocks) {
     int choix;
+    string desc;
+    Stock S;
 
     while(true){
         system("cls");
@@ -439,6 +444,66 @@ void fonct1(set <Stock>& stocks) {
                 break;
             case 3:
                 // Manipuler le stock
+                int ref_stock, choix2;
+                
+                set <Stock>::iterator it;
+                system("cls");
+                cout << "------- Gestion Stock -------" << endl << endl;
+                cout << "Veuillez choisir l'operation a effectuer :" << endl;
+                cout << "\t1. Ajouter stock" << endl << "\t2. Modifier stock" << endl << "\t3. Supprimer stock" << endl;
+                cin >> choix2;
+                switch (choix2){
+                    case 1:
+                        //ajouter stock
+                        system("cls");
+                        cout << "Entrez les informations du stock:" << endl;
+                        cout << "\tReference: ";
+                        cin >> ref_stock;
+                        cout << "\tDescription: ";
+                        cin >> desc;
+                        S.setReference(ref_stock);
+                        S.setDescription(desc);
+                        stocks.insert(S);
+                        cout << "Stock ajoute avec succes!" << endl;
+                        break;
+                    case 2:
+                        // modifier stock
+                        system("cls");
+                        cout << "Entrez la reference du stock a modifier: ";
+                        cin >> ref_stock;
+                        for(it=stocks.begin(); it!=stocks.end(); it++){
+                            if(it->getReference() == ref_stock){
+                                cout << "Entrez les nouvelles informations du stock:" << endl;
+                                cout << "\tReference: ";
+                                cin >> ref_stock;
+                                cout << "\tDescription: ";
+                                cin >> desc;
+                                Stock modifiedStock = *it;
+                                modifiedStock.setReference(ref_stock);
+                                modifiedStock.setDescription(desc);
+                                stocks.erase(it);
+                                stocks.insert(modifiedStock);
+                                cout << "Stock modifie avec succes!" << endl;
+                                break;
+                            }
+                        }
+                    case 3:
+                        //supprimer stock
+                        system("cls");
+                        cout << "Entrer la reference  du stock a supprimer :";
+                        cin >> ref_stock;
+                        for(it=stocks.begin(); it!=stocks.end(); it++){
+                            if(it->getReference() == ref_stock){
+                                stocks.erase(it);
+                                cout << "Stock supprime avec succes!" << endl;
+                                break;
+                            }
+                            else{
+                                cout << "Stock introuvable!" << endl;
+                            }
+                        }
+
+                }
                 break;
             default:
                 cout << "Choix invalide. Tapez un bouton pour retourner au MENU... ";
