@@ -25,6 +25,7 @@
 #include <string>
 #include <vector>
 #include <set>
+#include <deque>
 #include <cstdlib>
 using namespace std;
 
@@ -289,6 +290,10 @@ class Fournisseur{
         string getContact() const{
             return contact;
         }
+
+        vector <Produit> getProduits() const{
+            return produits;
+        }
 };
 
 
@@ -551,6 +556,90 @@ void fonct1(set <Stock>& stocks) {
     
 }
 
+void fonct2(std::deque <Fournisseur>& fournisseur){
+    int choix;
+    int id;
+    string nom, contact;
+    deque <Fournisseur>::iterator it;
+
+    while(true){
+        system("cls");
+        cout << "------ 2 - Gestion Fournisseur ------" << endl << endl;
+        cout << "\t1. Remplir les fournisseurs" << endl 
+        << "\t2. Supprimer un fournisseur" << endl 
+        << "\t3. Afficher les produits inferieurs a 100dhs" << endl
+        << "\t4. Retour" << endl;
+        cout << "Votre choix: ";
+        cin >> choix;
+
+        if(choix == 4){
+            break;
+        }
+        switch(choix){
+            case 1:
+                // Cas 1 - Remplir les fournisseurs
+                int nb_fournisseur;
+                system("cls");
+                cout << "Nombre de fournisseurs à remplir: ";
+                cin >> nb_fournisseur;
+                for(it=fournisseur.begin(); it!=fournisseur.end(); it++){
+                    cout << "Fournisseur " << distance(fournisseur.begin(), it) + 1 << endl;
+                    cout << "\tIdentifiant: ";
+                    cin >> id;
+                    cout << "\tNom: ";
+                    cin >> nom;
+                    cout << "\tContact: ";
+                    cin >> contact;
+                    Fournisseur f(id, nom, contact);
+                    fournisseur.push_back(f);
+                }
+                cout << "Tapez un bouton pour retourner au MENU... ";
+                cin.ignore();
+                cin.get();
+                break;
+            case 2:
+                //Supprimer un fournisseur
+                system("cls");
+                cout << "Identifiant du fournisseur à supprimer: ";
+                cin >> id;
+                for(it=fournisseur.begin(); it!=fournisseur.end(); it++){
+                    if(it->getId() == id){
+                        fournisseur.erase(it);
+                        cout << "Fournisseur supprimé avec succès!" << endl;
+                        break;
+                    }
+                }
+                cout << "Tapez un bouton pour retourner au MENU... ";
+                cin.ignore();
+                cin.get();
+                break;
+            case 3:
+                //Afficher les produits dont le prix est inferieur a 100dhs
+                system("cls");
+                cout << "Entrer l'identifiant du fournisseur: ";
+                cin >> id;
+                for(it=fournisseur.begin(); it!=fournisseur.end(); it++){
+                    if(it->getId() == id){
+                        cout << "Produits dont le prix est inferieur a 100dhs: " << endl;
+                        for(int i=0; i<it->getProduits().size(); i++){
+                            if(it->getProduits()[i].getPrixHT() < 100){
+                                cout << "Produit " << i+1 << endl;
+                                cout << "\tReference: " << it->getProduits()[i].getReference() << endl;
+                                cout << "\tDesignation: " << it->getProduits()[i].getDesignation() << endl;
+                                cout << "\tQuantite: " << it->getProduits()[i].getQuantite() << endl;
+                                cout << "\tPrix: " << it->getProduits()[i].getPrixHT() << endl;
+                            }
+                        }
+                    }
+                }
+                cout << "Tapez un bouton pour retourner au MENU... ";
+                cin.ignore();
+                cin.get();
+                break;
+        }
+
+    }
+}
 
 int main(){
     set <Stock> stocks;
