@@ -157,6 +157,10 @@ class Produit{
         double getPrixHT() const{
             return prixHT;
         }
+
+        void ajouterFournisseur(const Fournisseur& f){
+            fournisseurs.push_back(f);
+        }
 };
 
 
@@ -294,6 +298,10 @@ class Fournisseur{
 
         vector <Produit> getProduits() const{
             return produits;
+        }
+
+        void ajouterProduit(Produit p){
+            produits.push_back(p);
         }
 };
 
@@ -634,83 +642,171 @@ void fonct2(deque <Fournisseur>& fournisseur){
 
 void fonct3(map <int, Produit>& m, deque <Fournisseur>& fournisseur, set <Stock>& stocks){
     int choix;
+    bool found;
 
     while(true){
         system("cls");
         cout << "------ 3 - Gestion Produits ------" << endl << endl;
         cout << "\t1. Remplir les produits" << endl
             << "\t2. Trier la liste des fournisseurs de chaque produit par leurs prix"
-        cout << "\t1. Ajouter un produit" << endl
-            << "\t2. Modifier un produit" << endl
-            << "\t3. Supprimer un produit" << endl
-            << "\t4. Retour" << endl
-            << "Votre choix: ";
-        cin >> choix;
+            << "\t3. Ajouter un fournisseur" << endl
+            << "\t4. Modifier un fournisseur" << endl
+            << "\t5. Supprimer un fournisseur" << endl
+            << "\t6. Afficher le nombre des produits avec date_paiement > 2 mois" << endl
+            << "\t7. Réduire le prix du produit de 10% (si qt > 200)" << endl
+            << "\t8. Retour" << endl;
         if(choix == 1){
-            // Cas 1 - Ajouter un produit
-            int ref, qte, id_fournisseur, ref_stock;
-            string des;
-            double prix;
-            Produit p;
-            Fournisseur f;
-            Stock s;
-            cout << "Entrez les informations du produit a ajouter:" << endl;
-            cout << "\tReference: ";
-            cin >> ref;
-            cout << "\tDesignation: ";
-            cin >> des;
-            cout << "\tQuantite: ";
-            cin >> qte;
-            cout << "\tPrix: ";
-            cin >> prix;
-            p.setReference(ref);
-            p.setDesignation(des);
-            p.setQuantite(qte);
-            p.setPrixHT(prix);
-            cout << "Entrez l'identifiant du fournisseur: ";
-            cin >> id_fournisseur;
-            cout << "Entrez la reference du stock: ";
-            cin >> ref_stock;
-            // Ajouter le produit au fournisseur
-            for(int i=0; i<fournisseur.size(); i++){
-                if(fournisseur[i].getId() == id_fournisseur){
-                    f = fournisseur[i];
-                    f.produits.push_back(p);
-                    break;
+            // Cas 1 - Remplir les produits
+            int nb_produit;
+            system("cls");
+            cout << "------ 3 - Gestion Produits ------" << endl << endl;
+            cout << "Nombre de produits à remplir: ";
+            cin >> nb_produit;
+            cout << endl;
+            for(int i=0; i<nb_produit; i++){
+                int ref, qte, id_fournisseur, ref_stock;
+                string des;
+                double prix;
+                Fournisseur f;
+                Stock s;
+                cout << "Produit " << i+1 << endl;
+                cout << "\tReference: ";
+                cin >> ref;
+                cout << "\tDesignation: ";
+                cin >> des;
+                cout << "\tQuantite: ";
+                cin >> qte;
+                cout << "\tPrix: ";
+                cin >> prix;
+                Produit p(ref, des, qte, prix);
+                // On ajoute les fournisseurs
+                int nb_fournisseur;
+                cout << "\tNombre de fournisseurs: ";
+                cin >> nb_fournisseur;
+                for(int j=0; j<nb_fournisseur; j++){
+                    int id_fournisseur;
+                    cout << "\tFournisseur " << j+1 << endl;
+                    cout << "\t\tIdentifiant: ";
+                    cin >> id_fournisseur;
+                    for(auto it=fournisseur.begin(); it!=fournisseur.end(); it++){
+                        if(it->getId() == id_fournisseur){
+                            f = *it;
+                            f.ajouterProduit(p);
+                            p.ajouterFournisseur(f);
+                            found = true;
+                            break;
+                        }
+                    }
+                    if(found == false){
+                        cout << "\tFournisseur introuvable! " << endl << endl;
+                    }
                 }
-            }
-            // Ajouter le produit au stock
-            for(auto it=stocks.begin(); it!=stocks.end(); it++){
-                if(it->getReference() == ref_stock){
-                    s = *it;
-                    s.ajouterProduit(p);
-                    break;
+                // Ajouter le produit au fournisseur
+                for(auto it=fournisseur.begin(); it!=fournisseur.end(); it++){
+                    if(it->getId() == id_fournisseur){
+                        f = *it;
+                        f.ajouterProduit(p);
+                        break;
+                    }
                 }
+                // Ajouter le produit au stock
+                cout << "\tReference du stock: ";
+                cin >> ref_stock;
+                for(auto it=stocks.begin(); it!=stocks.end(); it++){
+                    if(it->getReference() == ref_stock){
+                        s = *it;
+                        s.ajouterProduit(p);
+                        break;
+                    }
+                }
+                m.insert(pair<int, Produit>(ref, p));
+                cout << "Produit ajoute avec succes!" << endl;
             }
-            m.insert(pair<int, Produit>(ref, p));
-            cout << "Produit ajoute avec succes!" << endl;
         }
         else if(choix == 2){
-            // Cas 2 - Modifier un produit
-            int ref, choix2;
-            cout << "Entrez la reference du produit a modifier: ";
-            cin >> ref;
-            cout << endl;
-            cout << "Entrez les nouvelles informations du produit:" << endl;
-            cout << "\tDesignation: ";
-            cin >> des;
-            cout << "\tQuantite: ";
-            cin >> qte;
-            cout << "\tPrix: ";
-            cin >> prix;
-            Produit modifiedProduit = m[ref];
-            modifiedProduit.setDesignation(des);
-            modifiedProduit.setQuantite(qte);
-            modifiedProduit.setPrixHT(prix);
-            m[ref] = modifiedProduit;
-            cout << "Produit modifie avec succes!" << endl;
+            // Cas 2 - Trier la liste des fournisseurs de chaque produit par leurs prix
+            for(auto it=m.begin(); it!=m.end(); it++){
+                sort(it->second.fournisseurs.begin(), it->second.fournisseurs.end());
+            }
+            cout << "Liste des fournisseurs de chaque produit triee avec succes!" << endl;
+        }
+        else if(choix == 3){
+            // Cas 3 - Ajouter un fournisseur
+            int id;
+            string nom
+        }
+    
+    //     cout << "\t1. Ajouter un produit" << endl
+    //         << "\t2. Modifier un produit" << endl
+    //         << "\t3. Supprimer un produit" << endl
+    //         << "\t4. Retour" << endl
+    //         << "Votre choix: ";
+    //     cin >> choix;
+    //     if(choix == 1){
+    //         // Cas 1 - Ajouter un produit
+    //         int ref, qte, id_fournisseur, ref_stock;
+    //         string des;
+    //         double prix;
+    //         Produit p;
+    //         Fournisseur f;
+    //         Stock s;
+    //         cout << "Entrez les informations du produit a ajouter:" << endl;
+    //         cout << "\tReference: ";
+    //         cin >> ref;
+    //         cout << "\tDesignation: ";
+    //         cin >> des;
+    //         cout << "\tQuantite: ";
+    //         cin >> qte;
+    //         cout << "\tPrix: ";
+    //         cin >> prix;
+    //         p.setReference(ref);
+    //         p.setDesignation(des);
+    //         p.setQuantite(qte);
+    //         p.setPrixHT(prix);
+    //         cout << "Entrez l'identifiant du fournisseur: ";
+    //         cin >> id_fournisseur;
+    //         cout << "Entrez la reference du stock: ";
+    //         cin >> ref_stock;
+    //         // Ajouter le produit au fournisseur
+    //         for(int i=0; i<fournisseur.size(); i++){
+    //             if(fournisseur[i].getId() == id_fournisseur){
+    //                 f = fournisseur[i];
+    //                 f.produits.push_back(p);
+    //                 break;
+    //             }
+    //         }
+    //         // Ajouter le produit au stock
+    //         for(auto it=stocks.begin(); it!=stocks.end(); it++){
+    //             if(it->getReference() == ref_stock){
+    //                 s = *it;
+    //                 s.ajouterProduit(p);
+    //                 break;
+    //             }
+    //         }
+    //         m.insert(pair<int, Produit>(ref, p));
+    //         cout << "Produit ajoute avec succes!" << endl;
+    //     }
+    //     else if(choix == 2){
+    //         // Cas 2 - Modifier un produit
+    //         int ref, choix2;
+    //         cout << "Entrez la reference du produit a modifier: ";
+    //         cin >> ref;
+    //         cout << endl;
+    //         cout << "Entrez les nouvelles informations du produit:" << endl;
+    //         cout << "\tDesignation: ";
+    //         cin >> des;
+    //         cout << "\tQuantite: ";
+    //         cin >> qte;
+    //         cout << "\tPrix: ";
+    //         cin >> prix;
+    //         Produit modifiedProduit = m[ref];
+    //         modifiedProduit.setDesignation(des);
+    //         modifiedProduit.setQuantite(qte);
+    //         modifiedProduit.setPrixHT(prix);
+    //         m[ref] = modifiedProduit;
+    //         cout << "Produit modifie avec succes!" << endl;
 
-    }
+    // }
 
 }
 
