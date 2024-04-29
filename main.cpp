@@ -12,10 +12,10 @@
 //             sort(produits.begin(), produits.end());
 //
 //
-// continue from line 441
+// continue from line 637
 // TODOs:
-//      1) continue cas 3 in fonctionnalité 1 
-//      2) test wahib
+//      1) start fonctionnalité 3
+//      2) 
 //      3) 
 //
 //
@@ -374,6 +374,7 @@ void fonct1(set <Stock>& stocks) {
     string desc;
     Stock S;
     bool found;
+    set <Stock>::iterator it;
 
     while(true){
         system("cls");
@@ -384,74 +385,63 @@ void fonct1(set <Stock>& stocks) {
             << "\t4. Retour" << endl
             << "Votre choix: ";
         cin >> choix;
-        if(choix == 4){
-            break;
-        }
-        switch(choix){
-            case 1:
-                // Cas 1 - Remplir les stocks
-                int nb_stock, nb_produit;
-                system("cls");
-                cout << "------- Gestion Stock -------" << endl << endl;
-                cout << "Nombre de stocks à remplir? ";
-                cin >> nb_stock;
-                cout << endl << "Veuillez remplir les informations des stocks:" << endl << endl;
-                for(int i=0; i<nb_stock; i++){
-                    int ref_stock;
-                    string des_stock;
-                    cout << "Stock " << i+1 << endl;
-                    cout << "\tReference: ";
-                    cin >> ref_stock;
-                    cout << "\tDescription: ";
-                    cin >> des_stock;
-                    Stock s(ref_stock, des_stock);
-                    // Remplissage des produits à l'intérieur du stock dans vector<Produit> produits
-                    cout << "\t Nombre de produits à remplir? " << endl;
-                    cin >> nb_produit;
-                    cout << endl << "Veuillez remplir les informations des produits:" << endl << endl;
-                    for(int j=0; j<nb_produit; j++){
-                        int ref_prod;
-                        string des_prod;
-                        int qte_prod;
-                        double prix_prod;
-                        cout << "\tProduit " << j+1 << endl;
-                        cout << "\t\tReference: ";
-                        cin >> ref_prod;
-                        cout << "\t\tDescription: ";
-                        cin >> des_prod;
-                        cout << "\t\tQuantite: ";
-                        cin >> qte_prod;
-                        cout << "\t\tPrix: ";
-                        cin >> prix_prod;
-                        Produit p(ref_prod, des_prod, qte_prod, prix_prod);
-                        s.ajouterProduit(p);
-                        cout << endl;
-                    }
-                    stocks.insert(s);
+        if(choix == 1){
+            // Cas 1 - Remplir les stocks
+            int nb_stock, nb_produit;
+            system("cls");
+            cout << "------- Gestion Stock -------" << endl << endl;
+            cout << "Nombre de stocks à remplir? ";
+            cin >> nb_stock;
+            cout << endl << "Veuillez remplir les informations des stocks:" << endl << endl;
+            for(int i=0; i<nb_stock; i++){
+                int ref_stock;
+                string des_stock;
+                cout << "Stock " << i+1 << endl;
+                cout << "\tReference: ";
+                cin >> ref_stock;
+                cout << "\tDescription: ";
+                cin >> des_stock;
+                Stock s(ref_stock, des_stock);
+                // Remplissage des produits à l'intérieur du stock dans vector<Produit> produits
+                cout << "\t Nombre de produits à remplir? " << endl;
+                cin >> nb_produit;
+                cout << endl << "Veuillez remplir les informations des produits:" << endl << endl;
+                for(int j=0; j<nb_produit; j++){
+                    int ref_prod;
+                    string des_prod;
+                    int qte_prod;
+                    double prix_prod;
+                    cout << "\tProduit " << j+1 << endl;
+                    cout << "\t\tReference: ";
+                    cin >> ref_prod;
+                    cout << "\t\tDescription: ";
+                    cin >> des_prod;
+                    cout << "\t\tQuantite: ";
+                    cin >> qte_prod;
+                    cout << "\t\tPrix: ";
+                    cin >> prix_prod;
+                    Produit p(ref_prod, des_prod, qte_prod, prix_prod);
+                    s.ajouterProduit(p);
                     cout << endl;
                 }
-                cout << "Tapez un bouton pour retourner au MENU... ";
-                cin.ignore();
-                cin.get();
-                break;
-            case 2:
-                // Cas 2 - Afficher le nombre des produits de chaque stock
-                set <Stock>::iterator it;
-                system("cls");
-                cout << "------- Gestion Stock -------" << endl << endl;
-                cout << "Nombre de produits dans chaque stock:" << endl;
-                for(it=stocks.begin(); it!=stocks.end(); it++){
-                    cout << "\tStock " << it->getReference()
-                        << " - " << it->getNbProduits() << " produits" << endl;
-                }
-                cout << "Tapez un bouton pour retourner au MENU... ";
-                cin.ignore();
-                cin.get();
-                break;
-            case 3:
-                // Cas 3 - Manipuler le stock
-                int ref_stock, choix2;
-                set <Stock>::iterator it;
+                stocks.insert(s);
+                cout << endl;
+            }
+        }
+        else if(choix == 2){
+            // Cas 2 - Afficher le nombre des produits de chaque stock
+            system("cls");
+            cout << "------- Gestion Stock -------" << endl << endl;
+            cout << "Nombre de produits dans chaque stock:" << endl;
+            for(it=stocks.begin(); it!=stocks.end(); it++){
+                cout << "\tStock " << it->getReference()
+                    << " - " << it->getNbProduits() << " produits" << endl;
+            }
+        }
+        else if(choix == 3){
+            // Cas 3 - Manipuler le stock
+            int ref_stock, choix2;
+            while(true){
                 system("cls");
                 cout << "------- Gestion Stock -------" << endl << endl;
                 cout << "\t1. Ajouter stock" << endl
@@ -460,184 +450,188 @@ void fonct1(set <Stock>& stocks) {
                     << "\t4. Retour" << endl
                     << "Votre choix: ";
                 cin >> choix2;
-                switch (choix2){
-                    case 1:
-                        // Cas 3.1 - ajouter stock
-                        system("cls");
-                        cout << "------- Gestion Stock -------" << endl << endl;
-                        cout << "Entrez les informations du stock a ajouter:" << endl;
-                        cout << "\tReference: ";
-                        cin >> ref_stock;
-                        cout << "\tDescription: ";
-                        cin >> desc;
-                        S.setReference(ref_stock);
-                        S.setDescription(desc);
-                        stocks.insert(S);
-                        cout << "Stock ajoute avec succes!" << endl << endl;
-                        cout << "Tapez un bouton pour retourner au MENU... ";
-                        cin.ignore();
-                        cin.get();
-                        break;
-                    case 2:
-                        // Cas 3.2 - modifier stock
-                        system("cls");
-                        cout << "------- Gestion Stock -------" << endl << endl;
-                        cout << "Entrez la reference du stock a modifier: ";
-                        cin >> ref_stock;
-                        cout << endl;
-                        found = false;
-                        for(it=stocks.begin(); it!=stocks.end(); it++){
-                            if(it->getReference() == ref_stock){
-                                cout << "Entrez les nouvelles informations du stock:" << endl;
-                                cout << "\tReference: ";
-                                cin >> ref_stock;
-                                cout << "\tDescription: ";
-                                cin >> desc;
-                                Stock modifiedStock = *it;
-                                modifiedStock.setReference(ref_stock);
-                                modifiedStock.setDescription(desc);
-                                stocks.erase(it);
-                                stocks.insert(modifiedStock);
-                                cout << endl << "Stock modifie avec succes!" << endl << endl;
-                                found = true;
-                                break;
-                            }
+                if(choix2 == 1){
+                    // Cas 3.1 - ajouter stock
+                    system("cls");
+                    cout << "------- Gestion Stock -------" << endl << endl;
+                    cout << "Entrez les informations du stock a ajouter:" << endl;
+                    cout << "\tReference: ";
+                    cin >> ref_stock;
+                    cout << "\tDescription: ";
+                    cin >> desc;
+                    S.setReference(ref_stock);
+                    S.setDescription(desc);
+                    stocks.insert(S);
+                    cout << endl << "Stock ajoute avec succes!" << endl << endl;
+                }
+                else if(choix2 == 2){
+                    // Cas 3.2 - modifier stock
+                    system("cls");
+                    cout << "------- Gestion Stock -------" << endl << endl;
+                    cout << "Entrez la reference du stock a modifier: ";
+                    cin >> ref_stock;
+                    cout << endl;
+                    found = false;
+                    for(it=stocks.begin(); it!=stocks.end(); it++){
+                        if(it->getReference() == ref_stock){
+                            cout << "Entrez les nouvelles informations du stock:" << endl;
+                            cout << "\tReference: ";
+                            cin >> ref_stock;
+                            cout << "\tDescription: ";
+                            cin >> desc;
+                            Stock modifiedStock = *it;
+                            modifiedStock.setReference(ref_stock);
+                            modifiedStock.setDescription(desc);
+                            stocks.erase(it);
+                            stocks.insert(modifiedStock);
+                            cout << endl << "Stock modifie avec succes!" << endl << endl;
+                            found = true;
+                            break;
                         }
-                        if(found == false){
-                            cout << "Stock introuvable!" << endl << endl;
+                    }
+                    if(found == false){
+                        cout << "Stock introuvable!" << endl << endl;
+                    }
+                }
+                else if(choix2 == 3){
+                    // Cas 3.3 - supprimer stock
+                    system("cls");
+                    cout << "------- Gestion Stock -------" << endl << endl;
+                    cout << "Entrer la reference  du stock a supprimer :";
+                    cin >> ref_stock;
+                    cout << endl;
+                    found = false;
+                    for(it=stocks.begin(); it!=stocks.end(); it++){
+                        if(it->getReference() == ref_stock){
+                            stocks.erase(it);
+                            cout << "Stock supprime avec succes!" << endl;
+                            found = true;
+                            break;
                         }
-                        cout << "Tapez un bouton pour retourner au MENU... ";
-                        cin.ignore();
-                        cin.get();
-                        break;
-                    case 3:
-                        // Cas 3.3 - supprimer stock
-                        system("cls");
-                        cout << "------- Gestion Stock -------" << endl << endl;
-                        cout << "Entrer la reference  du stock a supprimer :";
-                        cin >> ref_stock;
-                        cout << endl;
-                        found = false;
-                        for(it=stocks.begin(); it!=stocks.end(); it++){
-                            if(it->getReference() == ref_stock){
-                                stocks.erase(it);
-                                cout << "Stock supprime avec succes!" << endl;
-                                found = true;
-                                break;
-                            }
-                        }
-                        if(found == false){
-                            cout << "Stock introuvable!" << endl << endl;
-                        }
-                        cout << "Tapez un bouton pour retourner au MENU... ";
-                        cin.ignore();
-                        cin.get();
-                        break;
-                    defautlt:
-                        cout << "Choix invalide. Tapez un bouton pour retourner au MENU... ";
-                        cin.ignore();
-                        cin.get();
-
+                    }
+                    if(found == false){
+                        cout << "Stock introuvable!" << endl << endl;
+                    }
+                }
+                else if(choix2 == 4){
+                    // Cas 3.4 - Retour
+                    break;
+                }
+                else{
+                    cout << "Choix invalide. ";
                 }
                 cout << "Tapez un bouton pour retourner au MENU... ";
                 cin.ignore();
                 cin.get();
-                break;
-            case 4:
-                break;
-            default:
-                cout << "Choix invalide. Tapez un bouton pour retourner au MENU... ";
-                cin.ignore();
-                cin.get();
+            }
         }
-    }
-    
-    // Affichage du nombre de produits dans chaque stock
-    
+        else if(choix == 4){
+            // Cas 4 - Retour
+            break;
+        }
+        else{
+            cout << "Choix invalide. ";
+        }
+        cout << "Tapez un bouton pour retourner au MENU... ";
+        cin.ignore();
+        cin.get();
+    } 
 }
 
 void fonct2(std::deque <Fournisseur>& fournisseur){
-    int choix;
-    int id;
+    int choix, id, nb_fournisseur;
     string nom, contact;
     deque <Fournisseur>::iterator it;
+    bool found;
 
     while(true){
         system("cls");
         cout << "------ 2 - Gestion Fournisseur ------" << endl << endl;
         cout << "\t1. Remplir les fournisseurs" << endl 
-        << "\t2. Supprimer un fournisseur" << endl 
-        << "\t3. Afficher les produits inferieurs a 100dhs" << endl
-        << "\t4. Retour" << endl;
-        cout << "Votre choix: ";
+            << "\t2. Supprimer un fournisseur" << endl 
+            << "\t3. Afficher les produits inferieurs a 100dhs" << endl
+            << "\t4. Retour" << endl
+            << "Votre choix: ";
         cin >> choix;
-
-        if(choix == 4){
-            break;
+        if(choix == 1){
+            // Cas 1 - Remplir les fournisseurs
+            system("cls");
+            cout << "------ 2 - Gestion Fournisseur ------" << endl << endl;
+            cout << "Nombre de fournisseurs à remplir: ";
+            cin >> nb_fournisseur;
+            cout << endl;
+            for(int i=0; i<nb_fournisseur; i++){
+                // cout << "Fournisseur " << distance(fournisseur.begin(), it) + 1 << endl;
+                cout << "Fournisseur " << i+1 << endl;
+                cout << "\tIdentifiant: ";
+                cin >> id;
+                cout << "\tNom: ";
+                cin >> nom;
+                cout << "\tContact: ";
+                cin >> contact;
+                Fournisseur f(id, nom, contact);
+                fournisseur.push_back(f);
+            }
         }
-        switch(choix){
-            case 1:
-                // Cas 1 - Remplir les fournisseurs
-                int nb_fournisseur;
-                system("cls");
-                cout << "Nombre de fournisseurs à remplir: ";
-                cin >> nb_fournisseur;
-                for(it=fournisseur.begin(); it!=fournisseur.end(); it++){
-                    cout << "Fournisseur " << distance(fournisseur.begin(), it) + 1 << endl;
-                    cout << "\tIdentifiant: ";
-                    cin >> id;
-                    cout << "\tNom: ";
-                    cin >> nom;
-                    cout << "\tContact: ";
-                    cin >> contact;
-                    Fournisseur f(id, nom, contact);
-                    fournisseur.push_back(f);
+        else if(choix == 2){
+            // Cas 2 - Supprimer un fournisseur
+            system("cls");
+            cout << "------ 2 - Gestion Fournisseur ------" << endl << endl;
+            cout << "Identifiant du fournisseur à supprimer: ";
+            cin >> id;
+            cout << endl;
+            found = false;
+            for(it=fournisseur.begin(); it!=fournisseur.end(); it++){
+                if(it->getId() == id){
+                    fournisseur.erase(it);
+                    cout << "Fournisseur supprimé avec succès!" << endl;
+                    found = true;
+                    break;
                 }
-                cout << "Tapez un bouton pour retourner au MENU... ";
-                cin.ignore();
-                cin.get();
-                break;
-            case 2:
-                //Supprimer un fournisseur
-                system("cls");
-                cout << "Identifiant du fournisseur à supprimer: ";
-                cin >> id;
-                for(it=fournisseur.begin(); it!=fournisseur.end(); it++){
-                    if(it->getId() == id){
-                        fournisseur.erase(it);
-                        cout << "Fournisseur supprimé avec succès!" << endl;
-                        break;
-                    }
-                }
-                cout << "Tapez un bouton pour retourner au MENU... ";
-                cin.ignore();
-                cin.get();
-                break;
-            case 3:
-                //Afficher les produits dont le prix est inferieur a 100dhs
-                system("cls");
-                cout << "Entrer l'identifiant du fournisseur: ";
-                cin >> id;
-                for(it=fournisseur.begin(); it!=fournisseur.end(); it++){
-                    if(it->getId() == id){
-                        cout << "Produits dont le prix est inferieur a 100dhs: " << endl;
-                        for(int i=0; i<it->getProduits().size(); i++){
-                            if(it->getProduits()[i].getPrixHT() < 100){
-                                cout << "Produit " << i+1 << endl;
-                                cout << "\tReference: " << it->getProduits()[i].getReference() << endl;
-                                cout << "\tDesignation: " << it->getProduits()[i].getDesignation() << endl;
-                                cout << "\tQuantite: " << it->getProduits()[i].getQuantite() << endl;
-                                cout << "\tPrix: " << it->getProduits()[i].getPrixHT() << endl;
-                            }
+            }
+            if(found == false){
+                cout << "Fournisseur introuvable!" << endl << endl;
+            }
+        }
+        else if(choix == 3){
+            // Cas 3 - Afficher les produits dont le prix est inferieur a 100dhs
+            vector <Produit> produits;
+            system("cls");
+            cout << "Entrer l'identifiant du fournisseur: ";
+            cin >> id;
+            cout << endl;
+            found = false;
+            for(it=fournisseur.begin(); it!=fournisseur.end(); it++){
+                if(it->getId() == id){
+                    cout << "Produits dont le prix est inferieur a 100dhs: " << endl;
+                    produits = it->getProduits();
+                    for(int i=0; i<produits.size(); i++){
+                        if(produits[i].getPrixHT() < 100){
+                            cout << "Produit " << i+1 << endl
+                                << "\tReference: " << produits[i].getReference() << endl
+                                << "\tDesignation: " << produits[i].getDesignation() << endl
+                                << "\tQuantite: " << produits[i].getQuantite() << endl
+                                << "\tPrix: " << produits[i].getPrixHT() << endl << endl;
                         }
                     }
+                    found = true;
+                    break;
                 }
-                cout << "Tapez un bouton pour retourner au MENU... ";
-                cin.ignore();
-                cin.get();
-                break;
+            }
+            if(found == false){
+                cout << "Fournisseur introuvable!" << endl << endl;
+            }
         }
-
+        else if(choix == 4){
+            // Cas 4 - Retour
+            break;
+        }
+        else{
+            cout << "Choix invalide. ";
+        }
+        cout << "Tapez un bouton pour retourner au MENU... ";
+        cin.ignore();
+        cin.get();
     }
 }
 
