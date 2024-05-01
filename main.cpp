@@ -943,12 +943,13 @@ void fonct4(list <Paiement>& paiements, map <int, Produit>& m, deque <Fournisseu
     
     while(true){
         cout << "------ 4 - Gestion Paiement ------" << endl << endl;
-        cout << "t\1. Remplir la liste des paiements" << endl
-            << "t\2. Ajouter 15.5% de TVA sur les produits de chaque paiement" << endl
-            << "t\3. Modifier le fournisseur d'un paiement" << endl
-            << "t\4. Ajouter /Supprimer un produit d'un paiement" << endl
-            << "t\5. Afficher pour chaque paiement la fiche de paiement" << endl;
-        cout << "Votre choix: ";
+        cout << "\t1. Remplir la liste des paiements" << endl
+            << "\t2. Ajouter 15.5% de TVA sur les produits de chaque paiement" << endl
+            << "\t3. Modifier le fournisseur d'un paiement" << endl
+            << "\t4. Ajouter /Supprimer un produit d'un paiement" << endl
+            << "\t5. Afficher pour chaque paiement la fiche de paiement" << endl
+            << "\t6. Retour" << endl
+            << "Votre choix: ";
         cin >> choix;
         if(choix == 1){
             int nb_paiement;
