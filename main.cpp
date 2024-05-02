@@ -14,8 +14,8 @@
 //
 // continue from line ...
 // TODOs:
-//      1) continue fonct 3
-//      2) change "found=false ..." to "auto it = find(...);"
+//      1) continue fonct 4 b9a fiha ghir chwiya
+//      2) 
 //      3) 
 //
 //
@@ -342,7 +342,7 @@ class Fournisseur{
 
         bool operator==(int f_id) const {
             return id == f_id;
-        }  
+        }
 };
 
 
@@ -356,11 +356,11 @@ class Paiement{
         // Paiement – Produit (* à *): un paiement concerne plusieurs produits, et un produit est concerné par plusieurs paiements
         vector <Produit> produits;
     public:
-        Paiement(int i=0, double m=0, date d=date()):
+        Paiement(int i=0, double m=0, date d=date(), Fournisseur* f=nullptr):
             id(i),
             montant(m),
             date_paiement(d),
-            fournisseur(nullptr){}
+            fournisseur(f){}
         
         Paiement(const Paiement& p){
             id = p.id;
@@ -419,7 +419,21 @@ class Paiement{
             cout << "- Total à payer: " << montant << endl;
         }
 
-        void setFournisseur(const )
+        void setFournisseur(Fournisseur* f){
+            fournisseur = f;
+        }
+
+        void ajouterProduit(Produit p){
+            produits.push_back(p);
+        }
+
+        vector <Produit> getProduits() const{
+            return produits;
+        }
+
+        bool operator==(int p_id) const {
+            return id == p_id;
+        }
 };
 
 
@@ -441,7 +455,7 @@ void fonct1(set <Stock>& stocks) {
             << "\t3. Manipuler le stock" << endl
             << "\t4. Retour" << endl
             << "Votre choix: ";
-        cin >> choix;
+        std::cin >> choix;
         // Vérifier si l'utilisateur n'a pas encore rempli les stocks
         if(choix != 1 && stocks.empty()){
             cout << endl << "Veuillez remplir les stocks d'abord!" << endl << endl;
@@ -452,20 +466,20 @@ void fonct1(set <Stock>& stocks) {
             system("cls");
             cout << "------- Gestion Stock -------" << endl << endl;
             cout << "Nombre de stocks à remplir? ";
-            cin >> nb_stock;
+            std::cin >> nb_stock;
             cout << endl << "Veuillez remplir les informations des stocks:" << endl << endl;
             for(int i=0; i<nb_stock; i++){
                 int ref_stock;
                 string des_stock;
                 cout << "Stock " << i+1 << endl;
                 cout << "\tReference: ";
-                cin >> ref_stock;
+                std::cin >> ref_stock;
                 cout << "\tDescription: ";
-                cin >> des_stock;
+                std::cin >> des_stock;
                 Stock s(ref_stock, des_stock);
                 // Remplissage des produits à l'intérieur du stock dans vector<Produit> produits
                 cout << "\t Nombre de produits à remplir? " << endl;
-                cin >> nb_produit;
+                std::cin >> nb_produit;
                 cout << endl << "Veuillez remplir les informations des produits:" << endl << endl;
                 for(int j=0; j<nb_produit; j++){
                     int ref_prod;
@@ -474,13 +488,13 @@ void fonct1(set <Stock>& stocks) {
                     double prix_prod;
                     cout << "\tProduit " << j+1 << endl;
                     cout << "\t\tReference: ";
-                    cin >> ref_prod;
+                    std::cin >> ref_prod;
                     cout << "\t\tDescription: ";
-                    cin >> des_prod;
+                    std::cin >> des_prod;
                     cout << "\t\tQuantite: ";
-                    cin >> qte_prod;
+                    std::cin >> qte_prod;
                     cout << "\t\tPrix: ";
-                    cin >> prix_prod;
+                    std::cin >> prix_prod;
                     Produit p(ref_prod, des_prod, qte_prod, prix_prod);
                     s.ajouterProduit(p);
                     cout << endl;
@@ -510,16 +524,16 @@ void fonct1(set <Stock>& stocks) {
                     << "\t3. Supprimer stock" << endl
                     << "\t4. Retour" << endl
                     << "Votre choix: ";
-                cin >> choix2;
+                std::cin >> choix2;
                 if(choix2 == 1){
                     // Cas 3.1 - ajouter stock
                     system("cls");
                     cout << "------- Gestion Stock -------" << endl << endl;
                     cout << "Entrez les informations du stock a ajouter:" << endl;
                     cout << "\tReference: ";
-                    cin >> ref_stock;
+                    std::cin >> ref_stock;
                     cout << "\tDescription: ";
-                    cin >> desc;
+                    std::cin >> desc;
                     S.setReference(ref_stock);
                     S.setDescription(desc);
                     stocks.insert(S);
@@ -530,7 +544,7 @@ void fonct1(set <Stock>& stocks) {
                     system("cls");
                     cout << "------- Gestion Stock -------" << endl << endl;
                     cout << "Entrez la reference du stock a modifier: ";
-                    cin >> ref_stock;
+                    std::cin >> ref_stock;
                     cout << endl;
                     if(stocks.find(ref_stock) == stocks.end()){
                         cout << "Stock introuvable!" << endl << endl;
@@ -538,9 +552,9 @@ void fonct1(set <Stock>& stocks) {
                     else{
                         cout << "Entrez les nouvelles informations du stock:" << endl;
                         cout << "\tReference: ";
-                        cin >> ref_stock;
+                        std::cin >> ref_stock;
                         cout << "\tDescription: ";
-                        cin >> desc;
+                        std::cin >> desc;
                         Stock stock_modifie = *it;
                         stock_modifie.setReference(ref_stock);
                         stock_modifie.setDescription(desc);
@@ -554,7 +568,7 @@ void fonct1(set <Stock>& stocks) {
                     system("cls");
                     cout << "------- Gestion Stock -------" << endl << endl;
                     cout << "Entrer la reference  du stock a supprimer :";
-                    cin >> ref_stock;
+                    std::cin >> ref_stock;
                     cout << endl;
                     if(stocks.find(ref_stock) == stocks.end()){
                         cout << "Stock introuvable!" << endl << endl;
@@ -572,8 +586,8 @@ void fonct1(set <Stock>& stocks) {
                     cout << "Choix invalide. ";
                 }
                 cout << "Tapez un bouton pour retourner au MENU... ";
-                cin.ignore();
-                cin.get();
+                std::cin.ignore();
+                std::cin.get();
             }
         }
         else if(choix == 4){
@@ -584,8 +598,8 @@ void fonct1(set <Stock>& stocks) {
             cout << "Choix invalide. ";
         }
         cout << "Tapez un bouton pour retourner au MENU... ";
-        cin.ignore();
-        cin.get();
+        std::cin.ignore();
+        std::cin.get();
     } 
 }
 
@@ -602,7 +616,7 @@ void fonct2(deque <Fournisseur>& fournisseur){
             << "\t3. Afficher les produits inferieurs a 100dhs" << endl
             << "\t5. Trier les fournisseurs (alphabetique)" << endl
             << "Votre choix: ";
-        cin >> choix;
+        std::cin >> choix;
         if(choix != 1 && fournisseur.empty()){
             cout << endl << "Veuillez remplir les fournisseurs d'abord!" << endl << endl;
         }
@@ -611,17 +625,17 @@ void fonct2(deque <Fournisseur>& fournisseur){
             system("cls");
             cout << "------ 2 - Gestion Fournisseur ------" << endl << endl;
             cout << "Nombre de fournisseurs à remplir: ";
-            cin >> nb_fournisseur;
+            std::cin >> nb_fournisseur;
             cout << endl;
             for(int i=0; i<nb_fournisseur; i++){
                 // cout << "Fournisseur " << distance(fournisseur.begin(), it) + 1 << endl;
                 cout << "Fournisseur " << i+1 << endl;
                 cout << "\tIdentifiant: ";
-                cin >> id;
+                std::cin >> id;
                 cout << "\tNom: ";
-                cin >> nom;
+                std::cin >> nom;
                 cout << "\tContact: ";
-                cin >> contact;
+                std::cin >> contact;
                 Fournisseur f(id, nom, contact);
                 fournisseur.push_back(f);
             }
@@ -631,7 +645,7 @@ void fonct2(deque <Fournisseur>& fournisseur){
             system("cls");
             cout << "------ 2 - Gestion Fournisseur ------" << endl << endl;
             cout << "Identifiant du fournisseur à supprimer: ";
-            cin >> id;
+            std::cin >> id;
             cout << endl;
             found = false;
             for(auto it=fournisseur.begin(); it!=fournisseur.end(); it++){
@@ -651,7 +665,7 @@ void fonct2(deque <Fournisseur>& fournisseur){
             vector <Produit> produits;
             system("cls");
             cout << "Entrer l'identifiant du fournisseur: ";
-            cin >> id;
+            std::cin >> id;
             cout << endl;
             found = false;
             for(auto it=fournisseur.begin(); it!=fournisseur.end(); it++){
@@ -690,8 +704,8 @@ void fonct2(deque <Fournisseur>& fournisseur){
             cout << "Choix invalide. ";
         }
         cout << "Tapez un bouton pour retourner au MENU... ";
-        cin.ignore();
-        cin.get();
+        std::cin.ignore();
+        std::cin.get();
     }
 }
 
@@ -711,14 +725,14 @@ void fonct3(map <int, Produit>& m, deque <Fournisseur>& fournisseur, set <Stock>
             << "\t6. Réduire le prix du produit de 10% (si qt > 200)" << endl
             << "\t7. Retour" << endl
             << "Votre choix: ";
-        cin >> choix;
+        std::cin >> choix;
         if(choix == 1){
             // Cas 1 - Remplir les produits
             int nb_produit;
             system("cls");
             cout << "------ 3 - Gestion Produits ------" << endl << endl;
             cout << "Nombre de produits à remplir: ";
-            cin >> nb_produit;
+            std::cin >> nb_produit;
             cout << endl;
             for(int i=0; i<nb_produit; i++){
                 int ref, qte, id_fournisseur, ref_stock;
@@ -729,24 +743,24 @@ void fonct3(map <int, Produit>& m, deque <Fournisseur>& fournisseur, set <Stock>
                 // On ajoute le produit
                 cout << "Produit " << i+1 << endl;
                 cout << "\tReference: ";
-                cin >> ref;
+                std::cin >> ref;
                 cout << "\tDesignation: ";
-                cin >> des;
+                std::cin >> des;
                 cout << "\tQuantite: ";
-                cin >> qte;
+                std::cin >> qte;
                 cout << "\tPrix: ";
-                cin >> prix;
+                std::cin >> prix;
                 Produit p(ref, des, qte, prix);
                 // On ajoute les fournisseurs
                 int nb_fournisseur;
                 cout << "\tNombre de fournisseurs: ";
-                cin >> nb_fournisseur;
+                std::cin >> nb_fournisseur;
                 cout << endl;
                 for(int j=0; j<nb_fournisseur; j++){
                     int id_fournisseur;
                     cout << "\tFournisseur " << j+1 << endl;
                     cout << "\t\tIdentifiant: ";
-                    cin >> id_fournisseur;
+                    std::cin >> id_fournisseur;
                     // Vérifier si le fournisseur existe dans deque (it1), et s'il n'est pas encore ajouté dans le vecteur de fournisseurs de Produit
                     auto it = find(fournisseur.begin(), fournisseur.end(), id_fournisseur);
                     if(it != fournisseur.end() && !p.fournisseur_existe(id_fournisseur)){
@@ -764,7 +778,7 @@ void fonct3(map <int, Produit>& m, deque <Fournisseur>& fournisseur, set <Stock>
                 // Lier le stock au produit si la référence du stock existe
                 while(true){
                     cout << "\tReference du stock: ";
-                    cin >> ref_stock;
+                    std::cin >> ref_stock;
                     auto it3 = find(stocks.begin(), stocks.end(), ref_stock);
                     if(it3 != stocks.end()){
                         // Stock existe dans le set
@@ -787,7 +801,7 @@ void fonct3(map <int, Produit>& m, deque <Fournisseur>& fournisseur, set <Stock>
             system("cls");
             cout << "------ 3 - Gestion Produits ------" << endl << endl;
             cout << "Reference du produit: ";
-            cin >> ref;
+            std::cin >> ref;
             if(m.find(ref) == m.end()){
                 cout << "Produit introuvable! " << endl << endl;
             }
@@ -796,7 +810,7 @@ void fonct3(map <int, Produit>& m, deque <Fournisseur>& fournisseur, set <Stock>
                 int id;
                 Fournisseur f;
                 cout << endl << "Identifiant du fournisseur: ";
-                cin >> id;
+                std::cin >> id;
                 // Vérifier si le fournisseur existe dans deque (it1), et s'il n'est pas encore ajouté dans le vecteur de fournisseurs de Produit (it2)
                 auto it = find(fournisseur.begin(), fournisseur.end(), id);
                 if(it != fournisseur.end() && !p.fournisseur_existe(id)){
@@ -818,7 +832,7 @@ void fonct3(map <int, Produit>& m, deque <Fournisseur>& fournisseur, set <Stock>
             system("cls");
             cout << "------ 3 - Gestion Produits ------" << endl << endl;
             cout << "Reference du produit: ";
-            cin >> ref;
+            std::cin >> ref;
             if(m.find(ref) == m.end()){
                 cout << "Produit introuvable! " << endl << endl;
             }
@@ -828,7 +842,7 @@ void fonct3(map <int, Produit>& m, deque <Fournisseur>& fournisseur, set <Stock>
                 string nom, contact;
                 Fournisseur f;
                 cout << endl << "Identifiant du fournisseur: ";
-                cin >> id;
+                std::cin >> id;
                 // Vérifier si le fournisseur existe dans deque (it1), et s'il n'est pas encore ajouté dans le vecteur de fournisseurs de Produit (it2)
                 auto it = find(fournisseur.begin(), fournisseur.end(), id);
                 if(it != fournisseur.end() && !p.fournisseur_existe(id)){
@@ -837,11 +851,11 @@ void fonct3(map <int, Produit>& m, deque <Fournisseur>& fournisseur, set <Stock>
                     system("cls");
                     cout << "------ 3 - Gestion Produits ------" << endl << endl;
                     cout << "Nouvelle id: ";
-                    cin >> id;
+                    std::cin >> id;
                     cout << endl << "Nouveau nom: ";
-                    cin >> nom;
+                    std::cin >> nom;
                     cout << endl << "Nouveau contact: ";
-                    cin >> contact;
+                    std::cin >> contact;
                     f.setId(id);
                     f.setNom(nom);
                     f.setContact(contact);
@@ -861,7 +875,7 @@ void fonct3(map <int, Produit>& m, deque <Fournisseur>& fournisseur, set <Stock>
             system("cls");
             cout << "------ 3 - Gestion Produits ------" << endl << endl;
             cout << "Reference du produit: ";
-            cin >> ref;
+            std::cin >> ref;
             if(m.find(ref) == m.end()){
                 cout << "Produit introuvable! " << endl << endl;
             }
@@ -870,7 +884,7 @@ void fonct3(map <int, Produit>& m, deque <Fournisseur>& fournisseur, set <Stock>
                 int id;
                 Fournisseur f;
                 cout << endl << "Identifiant du fournisseur: ";
-                cin >> id;
+                std::cin >> id;
                 // Vérifier si le fournisseur existe dans deque (it1), et s'il n'est pas encore ajouté dans le vecteur de fournisseurs de Produit (it2)
                 auto it = find(fournisseur.begin(), fournisseur.end(), id);
                 if(it != fournisseur.end() && !p.fournisseur_existe(id)){
@@ -933,8 +947,8 @@ void fonct3(map <int, Produit>& m, deque <Fournisseur>& fournisseur, set <Stock>
             cout << "Choix invalide. ";
         }
         cout << "Tapez un bouton pour retourner au MENU... ";
-        cin.ignore();
-        cin.get();
+        std::cin.ignore();
+        std::cin.get();
     }
 }
 
@@ -952,48 +966,112 @@ void fonct4(list <Paiement>& paiements, map <int, Produit>& m, deque <Fournisseu
             << "\t5. Afficher pour chaque paiement la fiche de paiement" << endl
             << "\t6. Retour" << endl
             << "Votre choix: ";
-        cin >> choix;
+        std::cin >> choix;
         if(choix == 1){
             // Cas 1 - Remplir la liste des paiements
             system("cls");
             cout << "------ 4 - Gestion Paiement ------" << endl << endl;
             cout << "Donnez le nombre des paiements à remplir: ";
-            cin >> nb_paiements;
+            std::cin >> nb_paiements;
             for(int i=0; i< nb_paiements; i++){
                 int id;
                 double montant;
                 date d;
                 int id_fournisseur;
-                Produit p;
+                int nb_produits;
                 cout << "Paiement " << i+1 << endl;
                 cout << "\tIdentifiant: ";
-                cin >> id;
+                std::cin >> id;
                 cout << "\tMontant: ";
-                cin >> montant;
+                std::cin >> montant;
                 cout << "\tDate paiement: ";
-                cin >> d.jour >> d.mois >> d.annee;
-                Paiement p(id, montant, d);
+                std::cin >> d.jour >> d.mois >> d.annee;
+                Paiement p(id, montant, d); // Initialisation du paiement
                 while(true){
                     cout << endl << "\tFournisseur: ";
-                    cin >> id_fournisseur;
+                    std::cin >> id_fournisseur;
                     // Vérifier si le fournisseur existe dans deque (it)
                     auto it = find(fournisseur.begin(), fournisseur.end(), id_fournisseur);
                     if(it != fournisseur.end()){
-                        
+                        Fournisseur& f = *it;
+                        p.setFournisseur(&f);
+                        cout << "Donnez le nombre des produits à ajouter: ";
+                        std::cin >> nb_produits;
+                        for(int i=0; i<nb_produits; i++){
+                            int ref;
+                            cout << "Produit " << i+1 << endl;
+                            cout << "\tReference: ";
+                            std::cin >> ref;
+                            // Vérifier si le produit existe dans map (it2)
+                            auto it2 = m.find(ref);
+                            if(it2 != m.end()){
+                                Produit prod;
+                                prod = it2->second;
+                                p.ajouterProduit(prod);
+                            }
+                            else{
+                                cout << "Produit introuvable! " << endl << endl;
+                            }
+                        }
                         break;
                     }
                     else if(it == fournisseur.end()){
-                        cout << "\tFournisseur introuvable! " << endl;
+                        cout << "\tFournisseur introuvable! " << endl << endl;
                     }
                 }
             }
         }
+        else if(choix == 2){
+            // Cas 2 - Ajouter 15.5% de TVA sur les produits de chaque paiement
+            for(auto it=paiements.begin(); it!=paiements.end(); it++){
+                auto produits = it->getProduits();
+                for(int i=0; i<produits.size(); i++){
+                    double nv_prix = produits[i].getPrixHT();
+                    produits[i].setPrixHT(nv_prix * 1.155);
+                }
+            }
+            system("cls");
+            cout << "------ 4 - Gestion Paiement ------" << endl << endl;
+            cout << "TVA ajoutée avec succes! " << endl << endl;
+        }
+        else if(choix == 3){
+            // Cas 3 - Modifier le fournisseur d'un paiement
+            int id_paiement, id_fournisseur;
+            string nom, contact;
+            system("cls");
+            cout << "------ 4 - Gestion Paiement ------" << endl << endl;
+            while(true){
+                cout << "Identifiant du paiement: ";
+                std::cin >> id_paiement;
+                // On vérifie si le paiement existe
+                auto it = find(paiements.begin(), paiements.end(), id_paiement);
+                if(it != paiements.end()){
+                    cout << "Nouvel identifiant du fournisseur: ";
+                    std::cin >> id_fournisseur;
+                    // On vérifie si le fournisseur existe
+                    auto it2 = find(fournisseur.begin(), fournisseur.end(), id_fournisseur);
+                    if(it2 != fournisseur.end()){
+                        Fournisseur& f = *it2;
+                        it->setFournisseur(&f);
+                        cout << "Fournisseur modifié avec succes! " << endl << endl;
+                    }
+                    else{
+                        cout << "Fournisseur introuvable! " << endl << endl;
+                    }
+                }
+                else{
+                    cout << "Paiement introuvable! " << endl << endl;
+                }
+            }   
+        }
+        
+    }
         // if(choix == 1){
         //     int nb_paiement;
         //     system("cls");
         //     cout << "------ 4 - Gestion Paiement ------" << endl
         //     cout << "Nombre de paiements à remplir: ";
-        //     cin >> nb_paiement;
+        //     std::cin >> nb_paiement;
         //     cout << endl;
         //     Paiement P;
         //     for(int i=0; i<nb_paiement;i++){
@@ -1004,11 +1082,11 @@ void fonct4(list <Paiement>& paiements, map <int, Produit>& m, deque <Fournisseu
         //         Produit p;
         //         cout << "Paiement " << i+1 << endl;
         //         cout << "\tIdentifiant: ";
-        //         cin >> id;
+        //         std::cin >> id;
         //         cout << "\tMontant: ";
-        //         cin >> montant;
+        //         std::cin >> montant;
         //         cout << "\tDate paiement: ";
-        //         cin >> d.jour >> d.mois >> d.annee;
+        //         std::cin >> d.jour >> d.mois >> d.annee;
         //         cout << "Ce paiement concerne le fournisseur avec l'identifiant: ";
         //         cin >> id_fournisseur;
         //         P(id, montant, d);
