@@ -417,8 +417,9 @@ class Paiement{
             }
 
             cout << "- Total à payer: " << montant << endl;
-            
         }
+
+        void setFournisseur(const )
 };
 
 
@@ -907,6 +908,7 @@ void fonct3(map <int, Produit>& m, deque <Fournisseur>& fournisseur, set <Stock>
                     }
                 }
             }
+            // Affichage
             system("cls");
             cout << "------ 3 - Gestion Produits ------" << endl << endl;
             cout << "Nombre des produits avec date_paiement > 2 mois: " << s << endl << endl;
@@ -939,7 +941,7 @@ void fonct3(map <int, Produit>& m, deque <Fournisseur>& fournisseur, set <Stock>
 
 void fonct4(list <Paiement>& paiements, map <int, Produit>& m, deque <Fournisseur>& fournisseur, set <Stock>& stocks){
     int choix;
-    bool found;
+    int nb_paiements;
     
     while(true){
         cout << "------ 4 - Gestion Paiement ------" << endl << endl;
@@ -952,14 +954,12 @@ void fonct4(list <Paiement>& paiements, map <int, Produit>& m, deque <Fournisseu
             << "Votre choix: ";
         cin >> choix;
         if(choix == 1){
-            int nb_paiement;
+            // Cas 1 - Remplir la liste des paiements
             system("cls");
-            cout << "------ 4 - Gestion Paiement ------" << endl
-            cout << "Nombre de paiements à remplir: ";
-            cin >> nb_paiement;
-            cout << endl;
-            Paiement P;
-            for(int i=0; i<nb_paiement;i++){
+            cout << "------ 4 - Gestion Paiement ------" << endl << endl;
+            cout << "Donnez le nombre des paiements à remplir: ";
+            cin >> nb_paiements;
+            for(int i=0; i< nb_paiements; i++){
                 int id;
                 double montant;
                 date d;
@@ -972,87 +972,124 @@ void fonct4(list <Paiement>& paiements, map <int, Produit>& m, deque <Fournisseu
                 cin >> montant;
                 cout << "\tDate paiement: ";
                 cin >> d.jour >> d.mois >> d.annee;
-                cout << "Ce paiement concerne le fournisseur avec l'identifiant: ";
-                cin >> id_fournisseur;
-                P(id, montant, d);
+                Paiement p(id, montant, d);
+                while(true){
+                    cout << endl << "\tFournisseur: ";
+                    cin >> id_fournisseur;
+                    // Vérifier si le fournisseur existe dans deque (it)
+                    auto it = find(fournisseur.begin(), fournisseur.end(), id_fournisseur);
+                    if(it != fournisseur.end()){
+                        
+                        break;
+                    }
+                    else if(it == fournisseur.end()){
+                        cout << "\tFournisseur introuvable! " << endl;
+                    }
+                }
+            }
+        }
+        // if(choix == 1){
+        //     int nb_paiement;
+        //     system("cls");
+        //     cout << "------ 4 - Gestion Paiement ------" << endl
+        //     cout << "Nombre de paiements à remplir: ";
+        //     cin >> nb_paiement;
+        //     cout << endl;
+        //     Paiement P;
+        //     for(int i=0; i<nb_paiement;i++){
+        //         int id;
+        //         double montant;
+        //         date d;
+        //         int id_fournisseur;
+        //         Produit p;
+        //         cout << "Paiement " << i+1 << endl;
+        //         cout << "\tIdentifiant: ";
+        //         cin >> id;
+        //         cout << "\tMontant: ";
+        //         cin >> montant;
+        //         cout << "\tDate paiement: ";
+        //         cin >> d.jour >> d.mois >> d.annee;
+        //         cout << "Ce paiement concerne le fournisseur avec l'identifiant: ";
+        //         cin >> id_fournisseur;
+        //         P(id, montant, d);
 
                 
-            }
-        }
-        else if (choix == 2){
-            cout << "------ 4 - Gestion Paiement ------" << endl
-            cout << "Ajouter 15.5% de TVA sur les produits de chaque paiement" << endl;
-            for(auto it=paiements.begin(); it!=paiements.end(); it++){
-                for(int i=0; i<it->produits.size(); i++){
-                    it->montant += it->produits[i].getPrixHT() * 0.155;
-                }
-            }
-        }
-        else if (choix == 3){
-            cout << "------ 4 - Gestion Paiement ------" << endl
-            cout << "Modifier le fournisseur d'un paiement" << endl;
-            int id_paiement, id_fournisseur;
-            string nom, contact;
-            cout << "Identifiant du paiement: ";
-            cin >> id_paiement;
-            cout << "Nouvel identifiant du fournisseur: ";
-            cin >> id_fournisseur;
-            cout << "Nouveaux nom du fournisseur: ";
-            cin >> nom;   
-            cout << "Nouveau contact du fournisseur: ";
-            cin >> contact;
-            Fournisseur f(id_fournisseur, nom, contact);
-            for(auto it=paiements.begin(); it!=paiements.end(); it++){
-                if(it->getId() == id_paiement){
-                    it->fournisseur = &f;
-                    break;
-                }
-            }
-        }
-        else if (choix == 4){
-            int choix2;
-            cout << "------ 4 - Gestion Paiement ------" << endl
-            cout << "Ajouter /Supprimer un produit d’un paiement" << endl;
-            cout << "Veuillez choisir une action: " << endl;
-            cout << "\t1. Ajouter un produit" << endl
-                << "\t2. Supprimer un produit" << endl;
-            cout << "Votre choix: ";
-            cin >> choix2;
-            if(choix2 == 1){
-                int id_paiement, ref_produit;
-                cout << "Identifiant du paiement: ";
-                cin >> id_paiement;
-                cout << "Reference du produit: ";
-                cin >> ref_produit;
-                for(auto it=paiements.begin(); it!=paiements.end(); it++){
-                    if(it->getId() == id_paiement){
-                        for(int i=0; i<it->produits.size(); i++){
-                            if(it->produits[i].getReference() == ref_produit){
-                                it->produits.erase(it->produits.begin() + i);
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-            else if(choix2 == 2){
-                int id_paiement, ref_produit;
-                cout << "Identifiant du paiement: ";
-                cin >> id_paiement;
-                cout << "Reference du produit: ";
-                cin >> ref_produit;
-                for(auto it=paiements.begin(); it!=paiements.end(); it++){
-                    if(it->getId() == id_paiement){
-                        for(int i=0; i<it->produits.size(); i++){
-                            if(it->produits[i].getReference() == ref_produit){
-                                it->produits.erase(it->produits.begin() + i);
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        //     }
+        // }
+        // else if (choix == 2){
+        //     cout << "------ 4 - Gestion Paiement ------" << endl
+        //     cout << "Ajouter 15.5% de TVA sur les produits de chaque paiement" << endl;
+        //     for(auto it=paiements.begin(); it!=paiements.end(); it++){
+        //         for(int i=0; i<it->produits.size(); i++){
+        //             it->montant += it->produits[i].getPrixHT() * 0.155;
+        //         }
+        //     }
+        // }
+        // else if (choix == 3){
+        //     cout << "------ 4 - Gestion Paiement ------" << endl
+        //     cout << "Modifier le fournisseur d'un paiement" << endl;
+        //     int id_paiement, id_fournisseur;
+        //     string nom, contact;
+        //     cout << "Identifiant du paiement: ";
+        //     cin >> id_paiement;
+        //     cout << "Nouvel identifiant du fournisseur: ";
+        //     cin >> id_fournisseur;
+        //     cout << "Nouveaux nom du fournisseur: ";
+        //     cin >> nom;   
+        //     cout << "Nouveau contact du fournisseur: ";
+        //     cin >> contact;
+        //     Fournisseur f(id_fournisseur, nom, contact);
+        //     for(auto it=paiements.begin(); it!=paiements.end(); it++){
+        //         if(it->getId() == id_paiement){
+        //             it->fournisseur = &f;
+        //             break;
+        //         }
+        //     }
+        // }
+        // else if (choix == 4){
+        //     int choix2;
+        //     cout << "------ 4 - Gestion Paiement ------" << endl
+        //     cout << "Ajouter /Supprimer un produit d’un paiement" << endl;
+        //     cout << "Veuillez choisir une action: " << endl;
+        //     cout << "\t1. Ajouter un produit" << endl
+        //         << "\t2. Supprimer un produit" << endl;
+        //     cout << "Votre choix: ";
+        //     cin >> choix2;
+        //     if(choix2 == 1){
+        //         int id_paiement, ref_produit;
+        //         cout << "Identifiant du paiement: ";
+        //         cin >> id_paiement;
+        //         cout << "Reference du produit: ";
+        //         cin >> ref_produit;
+        //         for(auto it=paiements.begin(); it!=paiements.end(); it++){
+        //             if(it->getId() == id_paiement){
+        //                 for(int i=0; i<it->produits.size(); i++){
+        //                     if(it->produits[i].getReference() == ref_produit){
+        //                         it->produits.erase(it->produits.begin() + i);
+        //                         break;
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     }
+        //     else if(choix2 == 2){
+        //         int id_paiement, ref_produit;
+        //         cout << "Identifiant du paiement: ";
+        //         cin >> id_paiement;
+        //         cout << "Reference du produit: ";
+        //         cin >> ref_produit;
+        //         for(auto it=paiements.begin(); it!=paiements.end(); it++){
+        //             if(it->getId() == id_paiement){
+        //                 for(int i=0; i<it->produits.size(); i++){
+        //                     if(it->produits[i].getReference() == ref_produit){
+        //                         it->produits.erase(it->produits.begin() + i);
+        //                         break;
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
     }
 }
 
