@@ -566,7 +566,8 @@ void fonct1(set <Stock>& stocks) {
                     cout << "Entrez la reference du stock a modifier: ";
                     std::cin >> ref_stock;
                     cout << endl;
-                    if(stocks.find(ref_stock) == stocks.end()){
+                    auto it = stocks.find(ref_stock);
+                    if(it == stocks.end()){
                         cout << "Stock introuvable!" << endl << endl;
                     }
                     else{
@@ -614,7 +615,6 @@ void fonct1(set <Stock>& stocks) {
                     std::cin.ignore();
                     std::cin.get();
                 }
-                
             }
         }
         else if(choix == 4){
